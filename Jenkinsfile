@@ -2,9 +2,7 @@ pipeline {
 
     agent any
 
-
     stages {
-
 
         stage('Checkout') {
             steps {
@@ -13,7 +11,7 @@ pipeline {
         }
 
 
-        stage('Install Maven Check') {
+        stage('Maven Check') {
             steps {
                 sh 'mvn -version'
             }
@@ -38,14 +36,22 @@ pipeline {
             steps {
 
                 sh '''
-                docker rm -f dockercooked-app || true
+                echo "Stopping old container..."
+
+                docker stop dockercooked-app || true
+                docker rm dockercooked-app || true
+
+
+                echo "Starting new container..."
 
                 docker run -d \
                 --name dockercooked-app \
                 -p 8081:8081 \
                 dockercooked-app
-                '''
 
+
+                echo "Deployment completed"
+                '''
             }
         }
 
