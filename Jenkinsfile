@@ -1,8 +1,14 @@
 pipeline {
 
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9.9-eclipse-temurin-17'
+        }
+    }
+
 
     stages {
+
 
         stage('Checkout') {
             steps {
@@ -27,6 +33,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
+
                 sh '''
                 docker rm -f dockercooked-app || true
 
@@ -35,6 +42,7 @@ pipeline {
                 -p 8081:8081 \
                 dockercooked-app
                 '''
+
             }
         }
 
